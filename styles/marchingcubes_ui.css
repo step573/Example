@@ -24,13 +24,13 @@ PreviewWidget {
     min-width: 80px;
     max-width: 80px;
     min-height: 48px;
-    background-image: url(../../../styles/img/calcButton_48x48.png);
+    background-image: url(styles/img/calcButton_48x48.png);
     background-repeat: no-repeat;
     background-position: center center;
 }
 
 #PreviewWidgetCalcButton:disabled {
-    background-image: url(../../../styles/img/calcButton_48x48_disabled.png);
+    background-image: url(styles/img/calcButton_48x48_disabled.png);
     background-color: rgb(49, 49, 49);
     background-repeat: no-repeat;
 }
