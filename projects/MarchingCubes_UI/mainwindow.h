@@ -4,7 +4,8 @@
 #include <QMainWindow>
 
 class MyPaintWidget;
-
+class PreviewWidget;
+class MarchingCubes;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -15,6 +16,9 @@ public:
 
 private:
     MyPaintWidget* paintWidget;
+    PreviewWidget* previewWidget;
 
+    // Could be separately inside different thread
+    MarchingCubes* mc;
 };
 #endif // MAINWINDOW_H
