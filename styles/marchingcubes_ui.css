@@ -1,0 +1,33 @@
+QWidget {
+    background-color: rgb(82, 82, 82);
+    color: white;
+}
+
+PreviewWidget {
+    max-height: 100px;
+}
+
+#PreviewWidgetImage {
+    min-width: 80px;
+    min-height: 80px;
+    max-width: 80px;
+    max-height: 80px;
+    border: 1px solid black ;
+}
+
+#PreviewWidgetOpenButton {
+    min-width: 80px;
+    max-width: 80px;
+}
+
+#PreviewWidgetCalcButton {
+    min-width: 80px;
+    max-width: 80px;
+    min-height: 48px;
+    image: url(../../../styles/img/calcButton_48x48.png);
+}
+
+#PreviewWidgetCalcButton:disabled {
+    image: url(../../../styles/img/calcButton_48x48_disabled.png);
+    background-color: rgb(49, 49, 49);
+}
