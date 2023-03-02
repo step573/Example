@@ -1,53 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the examples of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:BSD$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** BSD License Usage
-** Alternatively, you may use this file under the terms of the BSD license
-** as follows:
-**
-** "Redistribution and use in source and binary forms, with or without
-** modification, are permitted provided that the following conditions are
-** met:
-**   * Redistributions of source code must retain the above copyright
-**     notice, this list of conditions and the following disclaimer.
-**   * Redistributions in binary form must reproduce the above copyright
-**     notice, this list of conditions and the following disclaimer in
-**     the documentation and/or other materials provided with the
-**     distribution.
-**   * Neither the name of The Qt Company Ltd nor the names of its
-**     contributors may be used to endorse or promote products derived
-**     from this software without specific prior written permission.
-**
-**
-** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-** "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-** LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-** A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-** OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-** SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-** LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #include "marchingCubes.h"
 #include <qmath.h>
 #include <QImage>
@@ -58,6 +8,14 @@
 MarchingCubes::MarchingCubes(QObject* parent)
     : QObject(parent)
 {
+
+}
+
+void MarchingCubes::setPathAndCalculate(const QStringList &list)
+{
+    m_data.clear();
+    m_count = 0;
+
     //deklarace tříd
     float prah = 120.0;
 
@@ -77,21 +35,13 @@ MarchingCubes::MarchingCubes(QObject* parent)
     float vertsy[12] = {};
     float vertsz[12] = {};
 
-    QDir dir("C:/_repo/Example/projects/Example");
-    QStringList filter;
-    filter << QLatin1String("*.png");
-    filter << QLatin1String("*.jpeg");
-    filter << QLatin1String("*.jpg");
-    dir.setNameFilters(filter);
-    QFileInfoList filelistinfo = dir.entryInfoList();
-
     //Cyklus pro marching cubes
-    for (int k = 0; k < filelistinfo.count() - 1; k++) {
+    for (int k = 0; k < list.count() - 1; k++) {
         QImage obrazek;
         QImage obrazek1;
 
-        QString imageFile = filelistinfo.at(k).absoluteFilePath();
-        QString imageFile1 = filelistinfo.at(k + 1).absoluteFilePath();
+        QString imageFile = list.at(k);
+        QString imageFile1 = list.at(k + 1);
 
         //Načte vždy 2 obrázky
         if (!obrazek.load(imageFile)) {
@@ -105,8 +55,8 @@ MarchingCubes::MarchingCubes(QObject* parent)
         }
         QSize velikost = obrazek.size();
 
-        for (int i = 0; i < (int)velikost.height() - 1; i++) {
-            for (int j = 0; j < (int)velikost.width() - 1; j++) {
+        for (int i = 0; i < (int)velikost.width() - 1; i++) {
+            for (int j = 0; j < (int)velikost.height() - 1; j++) {
 
                 //souřadnice bodů
                 sour1_x = i + 1;        sour1_y = j + 1;        sour1_z = k;
@@ -208,13 +158,13 @@ MarchingCubes::MarchingCubes(QObject* parent)
                 //Sestavení trojúhelníků
                 for (int n = 0; triTable[pripad][n] != -1; n += 3) {
                     //1. vrchol
-                    QVector3D first(vertsx[triTable[pripad][n + 2]] / velikost.height(), vertsy[triTable[pripad][n + 2]] / velikost.width(), vertsz[triTable[pripad][n + 2]] / (float)filelistinfo.count() );
+                    QVector3D first(vertsx[triTable[pripad][n + 2]] / velikost.width(), vertsy[triTable[pripad][n + 2]] / velikost.height(), vertsz[triTable[pripad][n + 2]] / (float)list.count() );
 
                     //2. vrchol
-                    QVector3D second(vertsx[triTable[pripad][n + 1]] / velikost.height(), vertsy[triTable[pripad][n + 1]] / velikost.width(), vertsz[triTable[pripad][n + 1]] / (float)filelistinfo.count() );
+                    QVector3D second(vertsx[triTable[pripad][n + 1]] / velikost.width(), vertsy[triTable[pripad][n + 1]] / velikost.height(), vertsz[triTable[pripad][n + 1]] / (float)list.count() );
 
                     //3. vrchol
-                    QVector3D third(vertsx[triTable[pripad][n]] / velikost.height(), vertsy[triTable[pripad][n]] / velikost.width(), vertsz[triTable[pripad][n]] / (float)filelistinfo.count());
+                    QVector3D third(vertsx[triTable[pripad][n]] / velikost.width(), vertsy[triTable[pripad][n]] / velikost.height(), vertsz[triTable[pripad][n]] / (float)list.count());
 
                     //Normálové vektory
                     QVector3D normal = QVector3D::normal(first, second);
@@ -225,6 +175,7 @@ MarchingCubes::MarchingCubes(QObject* parent)
             }
         }
     }
+    emit marchingCubesFinished(m_data, m_count);
 }
 
 void MarchingCubes::add(const QVector3D &v, const QVector3D &n)

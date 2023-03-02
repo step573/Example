@@ -12,13 +12,15 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     marchingCubes.cpp \
-    mypaintwidget.cpp
+    mypaintwidget.cpp \
+    previewwidget.cpp
 
 HEADERS += \
     MCTable.h \
     mainwindow.h \
     marchingCubes.h \
-    mypaintwidget.h
+    mypaintwidget.h \
+    previewwidget.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
