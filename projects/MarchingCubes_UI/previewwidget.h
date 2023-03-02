@@ -8,7 +8,16 @@ class QStringListModel;
 class QPushButton;
 class QLabel;
 class MarchingCubes;
+class QToolButton;
+class QSlider;
 
+/////////////////////////////////////////////////////////////
+///
+/// PreviewWidget - image loader and preview
+///
+/// TODO: better threshold selector
+///
+/////////////////////////////////////////////////////////////
 class PreviewWidget : public QWidget
 {
     Q_OBJECT
@@ -16,7 +25,7 @@ public:
     explicit PreviewWidget(QWidget *parent = nullptr);
 
 signals:
-    void calculateMarchingCubes(const QStringList& list);
+    void calculateMarchingCubes(const QStringList& list, int threshold);
 
 private slots:
     void openFileClicked();
@@ -29,10 +38,9 @@ private:
     QListView* listView;
     QStringListModel* listModel;
     QPushButton* openFileButton;
-    QPushButton* calculateButton;
+    QToolButton* calculateButton;
     QLabel* imageLabel;
-
-
+    QSlider* thresholdSlider;
 };
 
 #endif // PREVIEWWIDGET_H

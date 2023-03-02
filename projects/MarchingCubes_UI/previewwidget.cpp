@@ -2,12 +2,16 @@
 #include <QFileIconProvider>
 #include <QBoxLayout>
 #include <QPushButton>
+#include <QToolButton>
+#include <QMenu>
+#include <QWidgetAction>
 #include <QLabel>
 #include <QStringListModel>
 #include <QListView>
 #include <QFileDialog>
 #include <QPixmap>
 #include <QImage>
+#include <QSlider>
 
 PreviewWidget::PreviewWidget(QWidget *parent) : QWidget(parent)
 {
@@ -35,12 +39,22 @@ PreviewWidget::PreviewWidget(QWidget *parent) : QWidget(parent)
     openFileButton->setToolTip(tr("Open Image Files"));
     connect(openFileButton, &QPushButton::clicked, this, &PreviewWidget::openFileClicked);
 
-    calculateButton = new QPushButton(this);
+    calculateButton = new QToolButton(this);
+    calculateButton->setPopupMode(QToolButton::ToolButtonPopupMode::MenuButtonPopup);
     calculateButton->setObjectName("PreviewWidgetCalcButton");
     calculateButton->setStatusTip(tr("Calculate MC"));
     calculateButton->setToolTip(tr("Calculate MC"));
     connect(calculateButton, &QPushButton::clicked, this, &PreviewWidget::calculateClicked);
 
+    thresholdSlider = new QSlider(Qt::Horizontal, this);
+    thresholdSlider->setMaximum(255);
+    thresholdSlider->setMinimum(0);
+    thresholdSlider->setValue(120);
+    QMenu* menu = new QMenu(calculateButton);
+    QWidgetAction* sliderContainer = new QWidgetAction(menu);
+    sliderContainer->setDefaultWidget(thresholdSlider);
+    menu->addAction(sliderContainer);
+    calculateButton->setMenu(menu);
 
     QVBoxLayout* buttonLayout = new QVBoxLayout();
     buttonLayout->addWidget(openFileButton);
@@ -68,12 +82,11 @@ void PreviewWidget::openFileClicked()
         listModel->setStringList(fileName);
         calculateButton->setEnabled(true);
     }
-
 }
 
 void PreviewWidget::calculateClicked()
 {
-    emit calculateMarchingCubes(listModel->stringList());
+    emit calculateMarchingCubes(listModel->stringList(), thresholdSlider->value());
 }
 
 void PreviewWidget::clearContent()

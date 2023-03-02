@@ -47,7 +47,6 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-
 #ifndef MYPAINTWIDGET_H
 #define MYPAINTWIDGET_H
 
@@ -59,6 +58,13 @@
 
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
 
+/////////////////////////////////////////////////////////////
+///
+/// MyPaintWidget - opengl renderer
+///
+/// Based on Qt example: hellogl2
+///
+/////////////////////////////////////////////////////////////
 class MyPaintWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT

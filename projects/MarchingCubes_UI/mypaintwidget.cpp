@@ -90,6 +90,10 @@ void MyPaintWidget::setData(const QVector<GLfloat> &data, int count)
 {
     vcount = count;
     vdata = data;
+
+    // Clean and set new data
+    cleanup();
+    makeCurrent();
     initializeGL();
     update();
 }
